@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import {
   View, Text, StyleSheet, FlatList, TouchableOpacity, ScrollView, Alert, ActivityIndicator,
+  Linking, Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getMonthlySummary, getCollectionsByMember, getMemberById, MemberSummary } from '../db/database';
@@ -35,6 +36,70 @@ export default function ReportsScreen() {
     } finally {
       setGeneratingPdfId(null);
     }
+  };
+
+  const handleSendMessage = async (item: MemberSummary) => {
+    const member = getMemberById(item.member_id);
+    if (!member) {
+      Alert.alert('Error', t('detailsNotFound'));
+      return;
+    }
+    
+    if (!member.phone || !member.phone.trim()) {
+      Alert.alert(
+        'Missing Phone Number',
+        'This member does not have a registered phone number. Please edit the member details in the Members tab to add a phone number.'
+      );
+      return;
+    }
+
+    const monthLabelVal = format(parseISO(currentMonth + '-01'), 'MMMM yyyy');
+    const msg = `Dear ${member.name}, your milk collection report for ${monthLabelVal} is:\n` +
+      `- Total Milk: ${item.total_litres.toFixed(1)} Litres\n` +
+      `- Average Fat: ${item.avg_fat.toFixed(2)}%\n` +
+      `- Total Earnings: ₹${item.total_amount.toFixed(0)}\n` +
+      `Thank you!`;
+
+    const encodedMsg = encodeURIComponent(msg);
+    const cleanedPhone = member.phone.replace(/[^0-9+]/g, '');
+
+    Alert.alert(
+      'Send Earnings Message',
+      `Send total earning message to ${member.name} (${member.phone})?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Send via WhatsApp',
+          onPress: async () => {
+            const phoneWithCode = cleanedPhone.length === 10 ? `+91${cleanedPhone}` : cleanedPhone;
+            const url = `whatsapp://send?phone=${phoneWithCode}&text=${encodedMsg}`;
+            try {
+              const supported = await Linking.canOpenURL(url);
+              if (supported) {
+                await Linking.openURL(url);
+              } else {
+                const webUrl = `https://wa.me/${phoneWithCode}?text=${encodedMsg}`;
+                await Linking.openURL(webUrl);
+              }
+            } catch (err) {
+              Alert.alert('Error', 'Could not open WhatsApp. Please ensure it is installed.');
+            }
+          }
+        },
+        {
+          text: 'Send via SMS',
+          onPress: async () => {
+            const separator = Platform.OS === 'ios' ? '&' : '?';
+            const url = `sms:${cleanedPhone}${separator}body=${encodedMsg}`;
+            try {
+              await Linking.openURL(url);
+            } catch (err) {
+              Alert.alert('Error', 'Could not open SMS application.');
+            }
+          }
+        }
+      ]
+    );
   };
 
   useFocusEffect(useCallback(() => { load(); }, [load]));
@@ -72,8 +137,8 @@ export default function ReportsScreen() {
             {t('daysCountLabel', { days: item.days_count })} · {t('avgFatLabel', { fat: item.avg_fat })}
           </Text>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.sm }}>
-          <View style={{ alignItems: 'flex-end' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}>
+          <View style={{ alignItems: 'flex-end', marginRight: spacing.xs }}>
             <Text style={styles.litres}>{item.total_litres} L</Text>
             <Text style={styles.amount}>₹{item.total_amount}</Text>
           </View>
@@ -88,6 +153,13 @@ export default function ReportsScreen() {
               <Text style={styles.pdfIcon}>📄</Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            onPress={() => handleSendMessage(item)}
+            style={styles.msgBtn}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.msgIcon}>💬</Text>
+          </TouchableOpacity>
         </View>
       </View>
       {/* Bar indicator */}
@@ -192,6 +264,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pdfIcon: { fontSize: 16 },
+  msgBtn: {
+    padding: 8,
+    backgroundColor: '#FEF3C7',
+    borderRadius: radius.sm,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  msgIcon: { fontSize: 16 },
   barBg: {
     height: 4,
     backgroundColor: colors.surfaceAlt,
