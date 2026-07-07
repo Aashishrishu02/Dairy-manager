@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Dairy Manager",
+    "slug": "dairy-manager",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F7F6F2"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1A6B3C"
+      },
+      "package": "com.dairy.manager",
+      "permissions": []
+    },
+    "ios": {
+      "bundleIdentifier": "com.dairy.manager",
+      "supportsTablet": false
+    }
+  }
+}
