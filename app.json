@@ -16,8 +16,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1A6B3C"
       },
-      "package": "com.dairy.manager",
-      "permissions": []
+      "package": "com.dairy.manager"
     },
     "ios": {
       "bundleIdentifier": "com.dairy.manager",
