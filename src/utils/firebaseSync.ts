@@ -1,28 +1,12 @@
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore, writeBatch, doc } from 'firebase/firestore';
+import { writeBatch, doc } from 'firebase/firestore';
 import { getDB } from '../db/database';
-
-// Default mock/fallback config or developer default to keep the app working instantly
-const defaultFirebaseConfig = {
-  apiKey: "AIzaSyFakeKeyPlaceholderForBuildSuccess",
-  authDomain: "dairy-manager-app.firebaseapp.com",
-  projectId: "dairy-manager-app",
-  storageBucket: "dairy-manager-app.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef123456"
-};
+import { firestore, firebaseConfig } from './firebase';
 
 export async function syncDataToCloud(
-  customConfig?: typeof defaultFirebaseConfig,
+  customConfig?: typeof firebaseConfig,
   deviceId: string = 'default_device'
 ): Promise<{ success: boolean; message: string }> {
   try {
-    const config = customConfig || defaultFirebaseConfig;
-    
-    // Initialize firebase app
-    const app = getApps().length === 0 ? initializeApp(config) : getApp();
-    const firestore = getFirestore(app);
-
     const db = getDB();
 
     // 1. Fetch SQLite tables

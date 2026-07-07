@@ -6,10 +6,14 @@ interface DairyStore {
   selectedDate: string;
   selectedSession: 'AM' | 'PM';
   language: 'en' | 'hi';
+  user: { email: string; uid: string } | null;
+  loadingAuth: boolean;
   refreshMembers: () => void;
   setDate: (date: string) => void;
   setSession: (s: 'AM' | 'PM') => void;
   setLanguage: (lang: 'en' | 'hi') => void;
+  setUser: (user: { email: string; uid: string } | null) => void;
+  setLoadingAuth: (loading: boolean) => void;
   computeAmount: (litres: number, fat: number) => { rate: number; amount: number };
 }
 
@@ -22,6 +26,8 @@ export const useDairyStore = create<DairyStore>((set) => ({
   selectedDate: todayStr(),
   selectedSession: new Date().getHours() < 12 ? 'AM' : 'PM',
   language: 'en',
+  user: null,
+  loadingAuth: true,
 
   refreshMembers: () => {
     const members = getAllMembers();
@@ -31,6 +37,8 @@ export const useDairyStore = create<DairyStore>((set) => ({
   setDate: (date) => set({ selectedDate: date }),
   setSession: (session) => set({ selectedSession: session }),
   setLanguage: (language) => set({ language }),
+  setUser: (user) => set({ user }),
+  setLoadingAuth: (loadingAuth) => set({ loadingAuth }),
 
   computeAmount: (litres, fat) => {
     const rate = getRateForFat(fat);

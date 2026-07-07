@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
-import { Text } from 'react-native';
+import { Text, View, ActivityIndicator } from 'react-native';
+import { onAuthStateChanged } from 'firebase/auth';
 
 import HomeScreen from '../screens/HomeScreen';
 import MembersScreen from '../screens/MembersScreen';
@@ -10,8 +11,11 @@ import TodayCollectionScreen from '../screens/TodayCollectionScreen';
 import ReportsScreen from '../screens/ReportsScreen';
 import FatRatesScreen from '../screens/FatRatesScreen';
 import AddCollectionScreen from '../screens/AddCollectionScreen';
+import LoginScreen from '../screens/LoginScreen';
 
 import { colors, radius } from '../utils/theme';
+import { auth } from '../utils/firebase';
+import { useDairyStore } from '../store/useDairyStore';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -99,6 +103,28 @@ function MainTabs() {
 }
 
 export default function AppNavigator() {
+  const { user, setUser, loadingAuth, setLoadingAuth } = useDairyStore();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (firebaseUser) {
+        setUser({ email: firebaseUser.email || '', uid: firebaseUser.uid });
+      } else {
+        setUser(null);
+      }
+      setLoadingAuth(false);
+    });
+    return unsubscribe;
+  }, [setUser, setLoadingAuth]);
+
+  if (loadingAuth) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: colors.bg }}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -116,16 +142,26 @@ export default function AppNavigator() {
           headerTintColor: colors.primary,
         }}
       >
-        <Stack.Screen
-          name="Main"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="AddCollection"
-          component={AddCollectionScreen}
-          options={{ title: 'New Milk Entry', presentation: 'modal' }}
-        />
+        {user ? (
+          <>
+            <Stack.Screen
+              name="Main"
+              component={MainTabs}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AddCollection"
+              component={AddCollectionScreen}
+              options={{ title: 'New Milk Entry', presentation: 'modal' }}
+            />
+          </>
+        ) : (
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

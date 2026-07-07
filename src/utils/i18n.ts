@@ -113,6 +113,15 @@ export const translations = {
     invalidRateAlert: 'Invalid rate',
     invalidRateAlertMsg: 'Enter a valid rate (greater than 0).',
     save: 'Save',
+
+    // Auth Strings
+    emailLabel: 'Email Address',
+    passwordLabel: 'Password',
+    errorLabel: 'Error',
+    successLabel: 'Success',
+    accountCreatedLabel: 'Account created successfully!',
+    authErrorLabel: 'Authentication Failed',
+    authFieldsRequired: 'Please fill in all fields.',
   },
   hi: {
     // Navigation titles
@@ -226,6 +235,15 @@ export const translations = {
     invalidRateAlert: 'अमान्य दर',
     invalidRateAlertMsg: 'कृपया सही दर (0 से अधिक) दर्ज करें।',
     save: 'सुरक्षित करें',
+
+    // Auth Strings
+    emailLabel: 'ईमेल पता',
+    passwordLabel: 'पासवर्ड',
+    errorLabel: 'त्रुटि',
+    successLabel: 'सफलता',
+    accountCreatedLabel: 'खाता सफलतापूर्वक बनाया गया!',
+    authErrorLabel: 'प्रमाणीकरण विफल',
+    authFieldsRequired: 'कृपया सभी फ़ील्ड भरें।',
   }
 };
 

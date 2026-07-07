@@ -4,11 +4,13 @@ import {
   TextInput, Alert, Modal, KeyboardAvoidingView, Platform,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { signOut } from 'firebase/auth';
 import { getAllRates, updateRate, FatRate } from '../db/database';
 import { Card, Button } from '../components/UI';
 import { colors, spacing, radius } from '../utils/theme';
 import { useTranslation } from '../utils/i18n';
 import { syncDataToCloud } from '../utils/firebaseSync';
+import { auth } from '../utils/firebase';
 
 export default function FatRatesScreen() {
   const [rates, setRates] = useState<FatRate[]>([]);
@@ -103,24 +105,42 @@ export default function FatRatesScreen() {
         renderItem={renderItem}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
-          <Card style={styles.syncCard}>
-            <View style={styles.syncRow}>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.syncTitle}>☁️ Cloud Sync Backup</Text>
-                <Text style={styles.syncSub}>Backup members & milk entry logs to Firestore</Text>
+          <View style={{ marginBottom: spacing.sm }}>
+            <Card style={styles.syncCard}>
+              <View style={styles.syncRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.syncTitle}>☁️ Cloud Sync Backup</Text>
+                  <Text style={styles.syncSub}>Backup members & milk entry logs to Firestore</Text>
+                </View>
+                <TouchableOpacity
+                  style={[styles.syncBtn, syncing && styles.syncBtnDisabled]}
+                  onPress={handleSync}
+                  disabled={syncing}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.syncBtnText}>
+                    {syncing ? 'Syncing...' : 'Sync Now'}
+                  </Text>
+                </TouchableOpacity>
               </View>
-              <TouchableOpacity
-                style={[styles.syncBtn, syncing && styles.syncBtnDisabled]}
-                onPress={handleSync}
-                disabled={syncing}
-                activeOpacity={0.8}
-              >
-                <Text style={styles.syncBtnText}>
-                  {syncing ? 'Syncing...' : 'Sync Now'}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </Card>
+            </Card>
+
+            <Card style={styles.logoutCard}>
+              <View style={styles.syncRow}>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.logoutTitle}>🔑 Account Session</Text>
+                  <Text style={styles.logoutSub}>Logged in as: {auth.currentUser?.email || 'Operator'}</Text>
+                </View>
+                <TouchableOpacity
+                  style={styles.logoutBtn}
+                  onPress={() => signOut(auth)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.logoutBtnText}>Logout</Text>
+                </TouchableOpacity>
+              </View>
+            </Card>
+          </View>
         }
       />
 
@@ -175,6 +195,36 @@ const styles = StyleSheet.create({
     borderColor: '#B9E0FF',
     borderWidth: 1,
     marginBottom: spacing.md,
+  },
+  logoutCard: {
+    padding: spacing.md,
+    backgroundColor: '#FFF1F2',
+    borderColor: '#FECDD3',
+    borderWidth: 1,
+    marginBottom: spacing.md,
+  },
+  logoutTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#E11D48',
+  },
+  logoutSub: {
+    fontSize: 12,
+    color: '#E11D48',
+    marginTop: 2,
+  },
+  logoutBtn: {
+    backgroundColor: '#E11D48',
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: radius.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoutBtnText: {
+    color: '#FFF',
+    fontSize: 13,
+    fontWeight: '700',
   },
   syncRow: {
     flexDirection: 'row',
