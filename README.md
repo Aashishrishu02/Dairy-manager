@@ -1,122 +1,101 @@
-# 🐄 Dairy Manager App
+# 🐄 Dairy Manager — Milk Collection & Billing App
 
-A complete milk collection and billing app built with React Native (Expo).
-Works **offline** — no internet needed after install.
-
----
-
-## Features
-
-| Feature | Done |
-|---|---|
-| Member registration (name, phone, village, cattle count) | ✅ |
-| Daily milk entry (AM / PM sessions) | ✅ |
-| Auto fat-based price calculation | ✅ |
-| Edit fat rate table | ✅ |
-| Today's collection view | ✅ |
-| Monthly reports with totals | ✅ |
-| Offline-first (SQLite on device) | ✅ |
-| Android APK build | ✅ |
+A premium, production-ready, offline-first mobile application built with **React Native (Expo)**, **TypeScript**, and **SQLite** to streamline daily milk collection, fat-based price calculations, payouts, and billing statements.
 
 ---
 
-## Setup (one time)
-
-### Requirements
-- Node.js 18+
-- A phone with Android 10+ OR Android emulator
-
-### Install
-
-```bash
-# 1. Install dependencies
-cd DairyApp
-npm install
-
-# 2. Start the development server
-npx expo start
-
-# 3. Scan QR code with Expo Go app on your phone
-#    OR press 'a' to open Android emulator
-```
-
-### Build APK (to share on WhatsApp)
-
-```bash
-# Install EAS CLI
-npm install -g eas-cli
-
-# Login to Expo account (free)
-eas login
-
-# Build APK
-eas build --platform android --profile preview
-```
-
-The APK download link will appear in your terminal. Share it on WhatsApp — recipients tap it to install directly (no Play Store needed).
+## 📌 Repository Tagline / Description
+> A premium, offline-first Milk Collection & Billing mobile app built with React Native (Expo), TypeScript, and SQLite. Features real-time fat-based price calculation, thermal receipt printing, Firebase cloud sync, monthly PDF billing statements, and bilingual (English/Hindi) support.
 
 ---
 
-## App Structure
+## ✨ Key Features
+
+* **👥 Supplier Directory**: Register suppliers with village names, phone numbers, cattle counts, and record advance balances with auto-deductions.
+* **🥛 Daily Collection Entry**: Record milk entries for Morning (AM) and Evening (PM) sessions with auto-calculated rates based on fat percentages.
+* **📈 Premium Live Pricing**: Dynamic calculation using customizable fat rate tables supporting fat values up to `15.0%`.
+* **🖨️ Thermal Receipt Printing**: Instantly print collections or share formatted 58mm receipts with suppliers via Bluetooth or WiFi thermal printers.
+* **📊 Monthly billing statements**: Compile payouts, averages, and collections into a highly professional, printable PDF document per supplier.
+* **☁️ Cloud Backup**: Sync local SQLite databases securely to **Firebase Firestore** with robust batch writes to prevent data loss.
+* **🌐 Bilingual Support**: Seamlessly toggle between **English** and **Hindi (हिन्दी)** translations.
+* **📱 Premium UI/UX**: Designed around a sleek emerald green visual language with floating cards, clean stats, and glassmorphic elements.
+
+---
+
+## 🛠️ Technology Stack
+
+* **Frontend Framework**: React Native (Expo SDK 51)
+* **Programming Language**: TypeScript
+* **State Management**: Zustand
+* **Database**: Expo-SQLite (Offline-first)
+* **Cloud Sync**: Firebase JS SDK (Firestore)
+* **PDF & Printing**: Expo-Print & Expo-Sharing
+* **Date Utilities**: date-fns
+
+---
+
+## 📁 Project Structure
 
 ```
 DairyApp/
-├── App.tsx                    # Entry point, DB init
-├── src/
-│   ├── db/
-│   │   └── database.ts        # All SQLite queries
-│   ├── store/
-│   │   └── useDairyStore.ts   # Global state (Zustand)
-│   ├── utils/
-│   │   └── theme.ts           # Colors, spacing, design tokens
-│   ├── components/
-│   │   └── UI.tsx             # Shared UI components
-│   ├── screens/
-│   │   ├── HomeScreen.tsx          # Dashboard
-│   │   ├── AddCollectionScreen.tsx # New milk entry
-│   │   ├── TodayCollectionScreen.tsx # View today's entries
-│   │   ├── MembersScreen.tsx       # Register & manage members
-│   │   ├── ReportsScreen.tsx       # Monthly summaries
-│   │   └── FatRatesScreen.tsx      # Edit fat price table
-│   └── navigation/
-│       └── AppNavigator.tsx   # Tab + Stack navigation
+├── App.tsx                    # Main entry point (DB init & app routing)
+├── app.json                   # Expo configurations & package metadata
+├── eas.json                   # EAS CLI cloud configuration (APK output)
+├── assets/                    # App icons, splash screens & graphics
+└── src/
+    ├── db/
+    │   └── database.ts        # SQLite DB queries & Web MockDatabase fallback
+    ├── store/
+    │   └── useDairyStore.ts   # Zustand global state management
+    ├── utils/
+    │   ├── theme.ts           # Emerald theme colors, typography, & tokens
+    │   ├── i18n.ts            # Translation dictionaries (EN/HI)
+    │   ├── pdfGenerator.ts    # PDF statements & thermal receipt generation
+    │   └── firebaseSync.ts    # Firestore cloud backup batch syncing
+    ├── components/
+    │   └── UI.tsx             # Shared premium UI controls (Card, Badge, Button)
+    └── screens/
+        ├── HomeScreen.tsx          # Main metrics & quick actions dashboard
+        ├── AddCollectionScreen.tsx # Milk collection input & receipt printing
+        ├── TodayCollectionScreen.tsx # Filtered daily collection registry
+        ├── MembersScreen.tsx       # Supplier management & directories
+        ├── ReportsScreen.tsx       # Monthly statements & PDF billing exporter
+        └── FatRatesScreen.tsx      # Pricing guidelines & Firebase sync portal
 ```
 
 ---
 
-## Database Tables
+## 🚀 Setting Up Locally
 
-| Table | Purpose |
-|---|---|
-| `members` | Milk supplier details |
-| `collections` | Daily milk entries |
-| `fat_rates` | Price table by fat % range |
-| `payments` | Payment records |
+### 1. Installation
+Clone the repository and install the dependencies:
+```bash
+git clone https://github.com/Aashishrishu02/Dairy-Manager.git
+cd Dairy-Manager
+npm install
+```
 
----
-
-## Fat Rate Table (default)
-
-| Fat % | Rate (₹/L) |
-|---|---|
-| 3.0 – 3.4 | ₹22 |
-| 3.5 – 3.9 | ₹24 |
-| 4.0 – 4.4 | ₹26 |
-| 4.5 – 4.9 | ₹28 |
-| 5.0 – 5.4 | ₹30 |
-| 5.5 – 5.9 | ₹32 |
-| 6.0 – 6.4 | ₹35 |
-| 6.5 – 6.9 | ₹38 |
-| 7.0 – 7.4 | ₹42 |
-| 7.5+ | ₹46 |
-
-> Edit these inside the app → Rates tab. Changes only affect new entries.
+### 2. Run the Development Server
+Start the Expo bundler:
+```bash
+npx expo start
+```
+* **Press `w`** to open the preview in your Web Browser (uses the `localStorage` fallback DB).
+* **Press `a`** to open on an Android emulator.
+* **Scan the QR Code** with the **Expo Go** application on your physical device.
 
 ---
 
-## Adding Phase 4 features later
+## 📦 Compiling Android APK
 
-- **Cloud backup**: Add `firebase` package, sync `collections` table to Firestore
-- **PDF bills**: Add `expo-print`, generate monthly bill per member
-- **Hindi language**: Add `i18n-js` package, translate screen strings
-- **Thermal printer**: Use `react-native-bluetooth-escpos-printer`
+To build a standalone Android installer APK:
+1. Ensure you have the EAS CLI installed and are logged into Expo:
+   ```bash
+   npm install -g eas-cli
+   npx eas login
+   ```
+2. Build the preview package:
+   ```bash
+   npm run build:apk
+   ```
+   *The download link for the `.apk` file will be provided in your terminal once the cloud build completes.*
