@@ -1,24 +1,24 @@
 export const colors = {
-  primary: '#1A6B3C',       // deep dairy green
-  primaryLight: '#E8F5EE',
-  primaryMid: '#2E8B57',
-  accent: '#F5A623',        // warm amber / milk gold
-  accentLight: '#FFF8EC',
-  danger: '#D94040',
-  dangerLight: '#FDEAEA',
-  success: '#2E8B57',
-  bg: '#F7F6F2',            // warm off-white
+  primary: '#10B981',       // Modern emerald green
+  primaryLight: '#ECFDF5',  // Emerald light tint
+  primaryMid: '#059669',    // Mid emerald
+  accent: '#F59E0B',        // Vibrant amber / gold
+  accentLight: '#FEF3C7',
+  danger: '#EF4444',        // Bright modern red
+  dangerLight: '#FEE2E2',
+  success: '#10B981',
+  bg: '#F9FAFB',            // Sleek light gray
   surface: '#FFFFFF',
-  surfaceAlt: '#F0EEE9',
-  border: '#E2DED7',
-  textPrimary: '#1A1A16',
-  textSecondary: '#6B6860',
-  textTertiary: '#9E9B94',
+  surfaceAlt: '#F3F4F6',    // Modern soft gray
+  border: '#E5E7EB',        // Clean modern border
+  textPrimary: '#111827',   // High contrast charcoal
+  textSecondary: '#4B5563', // Slate gray body text
+  textTertiary: '#9CA3AF',  // Muted text
   textOnPrimary: '#FFFFFF',
-  amBadge: '#FFF3CD',
-  amText: '#7D5A00',
-  pmBadge: '#E8F5EE',
-  pmText: '#1A6B3C',
+  amBadge: '#FEF3C7',
+  amText: '#D97706',
+  pmBadge: '#ECFDF5',
+  pmText: '#059669',
 };
 
 export const typography = {

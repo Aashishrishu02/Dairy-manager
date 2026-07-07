@@ -34,7 +34,7 @@ export async function syncDataToCloud(
     const batch = writeBatch(firestore);
 
     // 2. Add members to batch sync
-    members.forEach((m) => {
+    members.forEach((m: any) => {
       const memberRef = doc(firestore, `devices/${deviceId}/members`, String(m.id));
       batch.set(memberRef, {
         name: m.name,
@@ -48,7 +48,7 @@ export async function syncDataToCloud(
     });
 
     // 3. Add collections to batch sync
-    collections.forEach((c) => {
+    collections.forEach((c: any) => {
       const colRef = doc(firestore, `devices/${deviceId}/collections`, String(c.id));
       batch.set(colRef, {
         member_id: c.member_id,
@@ -64,7 +64,7 @@ export async function syncDataToCloud(
     });
 
     // 4. Add fat rates to batch sync
-    fatRates.forEach((fr) => {
+    fatRates.forEach((fr: any) => {
       const rateRef = doc(firestore, `devices/${deviceId}/fat_rates`, String(fr.id));
       batch.set(rateRef, {
         fat_min: fr.fat_min,
@@ -75,7 +75,7 @@ export async function syncDataToCloud(
     });
 
     // 5. Add payments to batch sync
-    payments.forEach((p) => {
+    payments.forEach((p: any) => {
       const payRef = doc(firestore, `devices/${deviceId}/payments`, String(p.id));
       batch.set(payRef, {
         member_id: p.member_id,

@@ -36,7 +36,7 @@ export default function AddCollectionScreen() {
   const qty = parseFloat(quantity) || 0;
   const fatPct = parseFloat(fat) || 0;
   const { rate, amount } = computeAmount(qty, fatPct);
-  const isValid = memberId && qty > 0 && fatPct >= 3 && fatPct <= 10;
+  const isValid = memberId && qty > 0 && fatPct >= 3 && fatPct <= 15;
 
   const handleSave = () => {
     if (!isValid) {

@@ -32,7 +32,7 @@ export default function HomeScreen() {
   const onRefresh = () => { setRefreshing(true); load(); setRefreshing(false); };
 
   const dateLabel = format(parseISO(selectedDate), 'EEEE, d MMM yyyy');
-  const monthLabel = format(parseISO(selectedDate + '-01'), 'MMMM yyyy');
+  const monthLabel = format(parseISO(selectedDate.substring(0, 7) + '-01'), 'MMMM yyyy');
 
   return (
     <ScrollView
