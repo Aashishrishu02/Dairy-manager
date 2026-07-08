@@ -110,7 +110,11 @@ export default function AppNavigator() {
       if (firebaseUser) {
         setUser({ email: firebaseUser.email || '', uid: firebaseUser.uid });
       } else {
-        setUser(null);
+        // Retain offline guest session if already logged in locally
+        const currentUser = useDairyStore.getState().user;
+        if (!currentUser || currentUser.uid !== 'offline_user') {
+          setUser(null);
+        }
       }
       setLoadingAuth(false);
     });

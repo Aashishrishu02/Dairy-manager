@@ -122,6 +122,7 @@ export const translations = {
     accountCreatedLabel: 'Account created successfully!',
     authErrorLabel: 'Authentication Failed',
     authFieldsRequired: 'Please fill in all fields.',
+    guestModeBtn: 'Continue Offline (Guest Mode)',
   },
   hi: {
     // Navigation titles
@@ -244,6 +245,7 @@ export const translations = {
     accountCreatedLabel: 'खाता सफलतापूर्वक बनाया गया!',
     authErrorLabel: 'प्रमाणीकरण विफल',
     authFieldsRequired: 'कृपया सभी फ़ील्ड भरें।',
+    guestModeBtn: 'ऑफ़लाइन (बिना इंटरनेट) शुरू करें',
   }
 };
 

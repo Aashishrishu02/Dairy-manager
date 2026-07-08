@@ -11,6 +11,7 @@ import { colors, spacing, radius } from '../utils/theme';
 import { useTranslation } from '../utils/i18n';
 import { syncDataToCloud } from '../utils/firebaseSync';
 import { auth } from '../utils/firebase';
+import { useDairyStore } from '../store/useDairyStore';
 
 export default function FatRatesScreen() {
   const [rates, setRates] = useState<FatRate[]>([]);
@@ -36,6 +37,15 @@ export default function FatRatesScreen() {
     } finally {
       setSyncing(false);
     }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+    } catch (e) {
+      console.log('Firebase signOut error:', e);
+    }
+    useDairyStore.getState().setUser(null);
   };
 
   const openEdit = (r: FatRate) => {
@@ -133,7 +143,7 @@ export default function FatRatesScreen() {
                 </View>
                 <TouchableOpacity
                   style={styles.logoutBtn}
-                  onPress={() => signOut(auth)}
+                  onPress={handleLogout}
                   activeOpacity={0.8}
                 >
                   <Text style={styles.logoutBtnText}>Logout</Text>

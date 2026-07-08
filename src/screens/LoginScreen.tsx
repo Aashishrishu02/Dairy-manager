@@ -11,6 +11,7 @@ import {
 import { auth } from '../utils/firebase';
 import { colors, spacing, radius, shadow } from '../utils/theme';
 import { useTranslation } from '../utils/i18n';
+import { useDairyStore } from '../store/useDairyStore';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -19,6 +20,11 @@ export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const { t } = useTranslation();
+  const { setUser } = useDairyStore();
+
+  const handleGuestLogin = () => {
+    setUser({ email: 'offline-operator@dairy.manager', uid: 'offline_user' });
+  };
 
   const handleEmailAuth = async () => {
     if (!email.trim() || !password.trim()) {
@@ -152,6 +158,20 @@ export default function LoginScreen() {
                   : "Don't have an account? Sign Up"}
               </Text>
             </TouchableOpacity>
+
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+            </View>
+
+            <TouchableOpacity
+              onPress={handleGuestLogin}
+              style={styles.guestBtn}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.guestBtnText}>
+                {t('guestModeBtn')}
+              </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -266,5 +286,20 @@ const styles = StyleSheet.create({
     color: colors.primaryMid,
     fontSize: 13,
     fontWeight: '600',
+  },
+  guestBtn: {
+    borderWidth: 1,
+    borderColor: colors.primary,
+    borderRadius: radius.md,
+    paddingVertical: 13,
+    backgroundColor: colors.primaryLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.xs,
+  },
+  guestBtnText: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: colors.primaryMid,
   },
 });
