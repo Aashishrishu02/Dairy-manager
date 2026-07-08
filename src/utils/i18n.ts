@@ -134,6 +134,7 @@ export const translations = {
     invalidPhoneMsg: 'Please enter a valid 10-digit phone number.',
     invalidOtp: 'Invalid OTP',
     invalidOtpMsg: 'Please enter the correct 4-digit verification code.',
+    orPhone: 'OR Login with Phone',
   },
   hi: {
     // Navigation titles
@@ -268,6 +269,7 @@ export const translations = {
     invalidPhoneMsg: 'कृपया एक वैध 10-अंकीय फ़ोन नंबर दर्ज करें।',
     invalidOtp: 'अमान्य ओटीपी',
     invalidOtpMsg: 'कृपया सही 4-अंकीय सत्यापन कोड दर्ज करें।',
+    orPhone: 'या फ़ोन नंबर से लॉगिन करें',
   }
 };
 

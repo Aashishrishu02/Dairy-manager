@@ -38,6 +38,7 @@ export default function LoginScreen() {
       Alert.alert(t('invalidPhone'), t('invalidPhoneMsg'));
       return;
     }
+    setLoginMethod('phone');
     setLoading(true);
     // Simulate SMS gateway request
     setTimeout(() => {
@@ -53,6 +54,7 @@ export default function LoginScreen() {
       Alert.alert(t('invalidOtp'), t('invalidOtpMsg'));
       return;
     }
+    setLoginMethod('phone');
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
@@ -65,6 +67,7 @@ export default function LoginScreen() {
       Alert.alert(t('errorLabel'), t('authFieldsRequired'));
       return;
     }
+    setLoginMethod('email');
     setLoading(true);
     try {
       if (isSignUp) {
@@ -137,117 +140,97 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.card}>
-            {/* Tabs selector */}
-            <View style={styles.tabContainer}>
-              <TouchableOpacity
-                style={[styles.tabButton, loginMethod === 'email' && styles.tabButtonActive]}
-                onPress={() => { setLoginMethod('email'); setOtpSent(false); }}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.tabButtonText, loginMethod === 'email' && styles.tabButtonTextActive]}>
-                  {t('emailTab')}
+            {/* Email Authentication Section */}
+            <Text style={styles.label}>{t('emailLabel')}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="operator@dairy.com"
+              placeholderTextColor={colors.textTertiary}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <Text style={styles.label}>{t('passwordLabel')}</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="••••••••"
+              placeholderTextColor={colors.textTertiary}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+              autoCapitalize="none"
+              autoCorrect={false}
+            />
+
+            <TouchableOpacity
+              style={styles.primaryBtn}
+              onPress={handleEmailAuth}
+              disabled={loading || googleLoading}
+              activeOpacity={0.8}
+            >
+              {loading && loginMethod === 'email' ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.primaryBtnText}>
+                  {isSignUp ? 'Sign Up' : 'Log In'}
                 </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.tabButton, loginMethod === 'phone' && styles.tabButtonActive]}
-                onPress={() => setLoginMethod('phone')}
-                activeOpacity={0.7}
-              >
-                <Text style={[styles.tabButtonText, loginMethod === 'phone' && styles.tabButtonTextActive]}>
-                  {t('phoneTab')}
-                </Text>
-              </TouchableOpacity>
+              )}
+            </TouchableOpacity>
+
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>{t('orPhone')}</Text>
+              <View style={styles.dividerLine} />
             </View>
 
-            {loginMethod === 'email' ? (
+            {/* Phone Authentication Section */}
+            <Text style={styles.label}>{t('phoneLabel')}</Text>
+            <View style={styles.phoneInputContainer}>
+              <Text style={styles.countryCode}>+91</Text>
+              <TextInput
+                style={styles.phoneInput}
+                placeholder="9876543210"
+                placeholderTextColor={colors.textTertiary}
+                value={phone}
+                onChangeText={setPhone}
+                keyboardType="phone-pad"
+                maxLength={10}
+                editable={!otpSent}
+              />
+            </View>
+
+            {otpSent && (
               <>
-                <Text style={styles.label}>{t('emailLabel')}</Text>
+                <Text style={styles.label}>{t('enterOtp')}</Text>
                 <TextInput
                   style={styles.input}
-                  placeholder="operator@dairy.com"
+                  placeholder="1234"
                   placeholderTextColor={colors.textTertiary}
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
+                  value={otp}
+                  onChangeText={setOtp}
+                  keyboardType="number-pad"
+                  maxLength={4}
                 />
-
-                <Text style={styles.label}>{t('passwordLabel')}</Text>
-                <TextInput
-                  style={styles.input}
-                  placeholder="••••••••"
-                  placeholderTextColor={colors.textTertiary}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-
-                <TouchableOpacity
-                  style={styles.primaryBtn}
-                  onPress={handleEmailAuth}
-                  disabled={loading || googleLoading}
-                  activeOpacity={0.8}
-                >
-                  {loading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.primaryBtnText}>
-                      {isSignUp ? 'Sign Up' : 'Log In'}
-                    </Text>
-                  )}
-                </TouchableOpacity>
-              </>
-            ) : (
-              <>
-                <Text style={styles.label}>{t('phoneLabel')}</Text>
-                <View style={styles.phoneInputContainer}>
-                  <Text style={styles.countryCode}>+91</Text>
-                  <TextInput
-                    style={styles.phoneInput}
-                    placeholder="9876543210"
-                    placeholderTextColor={colors.textTertiary}
-                    value={phone}
-                    onChangeText={setPhone}
-                    keyboardType="phone-pad"
-                    maxLength={10}
-                    editable={!otpSent}
-                  />
-                </View>
-
-                {otpSent && (
-                  <>
-                    <Text style={styles.label}>{t('enterOtp')}</Text>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="1234"
-                      placeholderTextColor={colors.textTertiary}
-                      value={otp}
-                      onChangeText={setOtp}
-                      keyboardType="number-pad"
-                      maxLength={4}
-                    />
-                  </>
-                )}
-
-                <TouchableOpacity
-                  style={styles.primaryBtn}
-                  onPress={otpSent ? handleVerifyOtp : handleSendOtp}
-                  disabled={loading}
-                  activeOpacity={0.8}
-                >
-                  {loading ? (
-                    <ActivityIndicator color="#fff" />
-                  ) : (
-                    <Text style={styles.primaryBtnText}>
-                      {otpSent ? t('verifyOtp') : t('sendOtp')}
-                    </Text>
-                  )}
-                </TouchableOpacity>
               </>
             )}
+
+            <TouchableOpacity
+              style={[styles.primaryBtn, { backgroundColor: colors.primaryMid }]}
+              onPress={otpSent ? handleVerifyOtp : handleSendOtp}
+              disabled={loading}
+              activeOpacity={0.8}
+            >
+              {loading && loginMethod === 'phone' ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.primaryBtnText}>
+                  {otpSent ? t('verifyOtp') : t('sendOtp')}
+                </Text>
+              )}
+            </TouchableOpacity>
 
             <View style={styles.dividerRow}>
               <View style={styles.dividerLine} />
