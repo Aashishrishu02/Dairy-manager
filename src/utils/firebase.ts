@@ -6,12 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyFakeKeyPlaceholderForBuildSuccess",
-  authDomain: "dairy-manager-app.firebaseapp.com",
-  projectId: "dairy-manager-app",
-  storageBucket: "dairy-manager-app.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef123456"
+  apiKey: "AIzaSyCoS7NIBE6n40DSGSci-K6pkxvfDi-0HvE",
+  authDomain: "dairy-manager-c98ed.firebaseapp.com",
+  projectId: "dairy-manager-c98ed",
+  storageBucket: "dairy-manager-c98ed.firebasestorage.app",
+  messagingSenderId: "325092299254",
+  appId: "1:325092299254:web:9d6498308da67ae84ef7d7"
 };
 
 // 1. Initialize Firebase App

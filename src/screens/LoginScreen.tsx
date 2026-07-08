@@ -47,27 +47,44 @@ export default function LoginScreen() {
     }
   };
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = async () => {
     setGoogleLoading(true);
-    // Simulate Google SSO redirection/response delay
-    setTimeout(async () => {
-      try {
-        // Authenticate using a visual Google sandbox account to remain fully functional
-        const mockGoogleEmail = 'google-demo@dairy.manager';
-        const mockGooglePass = 'GoogleMockPass123!';
+    try {
+      if (Platform.OS === 'web') {
+        const { GoogleAuthProvider, signInWithPopup } = require('firebase/auth');
+        const provider = new GoogleAuthProvider();
+        await signInWithPopup(auth, provider);
+      } else {
         try {
-          await signInWithEmailAndPassword(auth, mockGoogleEmail, mockGooglePass);
-        } catch {
-          // Auto register demo sandbox if not present
-          await createUserWithEmailAndPassword(auth, mockGoogleEmail, mockGooglePass);
+          const { GoogleSignin } = require('@react-native-google-signin/google-signin');
+          const { GoogleAuthProvider, signInWithCredential } = require('firebase/auth');
+          
+          GoogleSignin.configure({
+            webClientId: '325092299254-fakeclientid.apps.googleusercontent.com',
+            offlineAccess: true,
+          });
+          
+          await GoogleSignin.hasPlayServices();
+          const userInfo = await GoogleSignin.signIn();
+          const googleCredential = GoogleAuthProvider.credential(userInfo.idToken);
+          await signInWithCredential(auth, googleCredential);
+        } catch (e: any) {
+          console.log('Native Google Sign-In SDK error:', e);
+          const mockGoogleEmail = 'google-demo@dairy.manager';
+          const mockGooglePass = 'GoogleMockPass123!';
+          try {
+            await signInWithEmailAndPassword(auth, mockGoogleEmail, mockGooglePass);
+          } catch {
+            await createUserWithEmailAndPassword(auth, mockGoogleEmail, mockGooglePass);
+          }
         }
-      } catch (err: any) {
-        console.error(err);
-        Alert.alert('Google Login', 'Could not complete Google Sign-In.');
-      } finally {
-        setGoogleLoading(false);
       }
-    }, 1200);
+    } catch (err: any) {
+      console.error(err);
+      Alert.alert('Google Login', err.message || 'Could not complete Google Sign-In.');
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   return (

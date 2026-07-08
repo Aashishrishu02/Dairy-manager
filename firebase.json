@@ -1,0 +1,12 @@
+{
+  "auth": {
+    "providers": {
+      "emailPassword": {
+        "enable": true
+      },
+      "google.com": {
+        "enable": true
+      }
+    }
+  }
+}

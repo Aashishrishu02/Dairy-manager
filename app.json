@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1A6B3C"
       },
-      "package": "com.dairy.manager"
+      "package": "com.dairy.manager",
+      "googleServicesFile": "./google-services.json"
     },
     "ios": {
       "bundleIdentifier": "com.dairy.manager",

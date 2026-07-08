@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "325092299254",
+    "project_id": "dairy-manager-c98ed",
+    "storage_bucket": "dairy-manager-c98ed.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:325092299254:android:283a83f2b63b66164ef7d7",
+        "android_client_info": {
+          "package_name": "com.dairy.manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANi4fLuQdQOVoA5jWRT2aJB_6fYned9mk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
