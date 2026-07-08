@@ -29,8 +29,7 @@
       }
     },
     "plugins": [
-      "expo-font",
-      "@react-native-firebase/app"
+      "expo-font"
     ]
   }
 }
