@@ -123,6 +123,17 @@ export const translations = {
     authErrorLabel: 'Authentication Failed',
     authFieldsRequired: 'Please fill in all fields.',
     guestModeBtn: 'Continue Offline (Guest Mode)',
+    phoneTab: 'Phone Login',
+    emailTab: 'Email Login',
+    phoneLabel: 'Phone Number',
+    sendOtp: 'Send OTP',
+    verifyOtp: 'Verify & Login',
+    enterOtp: 'Enter Verification Code (OTP)',
+    otpSentSuccess: 'Verification code sent to +91 {phone}!',
+    invalidPhone: 'Invalid Phone Number',
+    invalidPhoneMsg: 'Please enter a valid 10-digit phone number.',
+    invalidOtp: 'Invalid OTP',
+    invalidOtpMsg: 'Please enter the correct 4-digit verification code.',
   },
   hi: {
     // Navigation titles
@@ -246,6 +257,17 @@ export const translations = {
     authErrorLabel: 'प्रमाणीकरण विफल',
     authFieldsRequired: 'कृपया सभी फ़ील्ड भरें।',
     guestModeBtn: 'ऑफ़लाइन (बिना इंटरनेट) शुरू करें',
+    phoneTab: 'फ़ोन लॉग इन',
+    emailTab: 'ईमेल लॉग इन',
+    phoneLabel: 'फ़ोन नंबर',
+    sendOtp: 'ओटीपी भेजें',
+    verifyOtp: 'सत्यापित करें और लॉग इन करें',
+    enterOtp: 'सत्यापन कोड (ओटीपी) दर्ज करें',
+    otpSentSuccess: 'सत्यापन कोड +91 {phone} पर भेज दिया गया है!',
+    invalidPhone: 'अमान्य फ़ोन नंबर',
+    invalidPhoneMsg: 'कृपया एक वैध 10-अंकीय फ़ोन नंबर दर्ज करें।',
+    invalidOtp: 'अमान्य ओटीपी',
+    invalidOtpMsg: 'कृपया सही 4-अंकीय सत्यापन कोड दर्ज करें।',
   }
 };
 

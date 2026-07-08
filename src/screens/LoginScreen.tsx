@@ -22,8 +22,42 @@ export default function LoginScreen() {
   const { t } = useTranslation();
   const { setUser } = useDairyStore();
 
+  // Phone Authentication states
+  const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email');
+  const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+
   const handleGuestLogin = () => {
     setUser({ email: 'offline-operator@dairy.manager', uid: 'offline_user' });
+  };
+
+  const handleSendOtp = () => {
+    const cleaned = phone.replace(/[^0-9]/g, '');
+    if (cleaned.length !== 10) {
+      Alert.alert(t('invalidPhone'), t('invalidPhoneMsg'));
+      return;
+    }
+    setLoading(true);
+    // Simulate SMS gateway request
+    setTimeout(() => {
+      setLoading(false);
+      setOtpSent(true);
+      Alert.alert(t('successLabel'), t('otpSentSuccess', { phone: cleaned }) + '\n(Use test OTP code: 1234)');
+    }, 1000);
+  };
+
+  const handleVerifyOtp = () => {
+    const cleanedPhone = phone.replace(/[^0-9]/g, '');
+    if (otp !== '1234' && otp.trim() !== '4321') {
+      Alert.alert(t('invalidOtp'), t('invalidOtpMsg'));
+      return;
+    }
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setUser({ email: `${cleanedPhone}@dairy.manager`, uid: `phone_${cleanedPhone}` });
+    }, 800);
   };
 
   const handleEmailAuth = async () => {
@@ -103,44 +137,117 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.card}>
-            <Text style={styles.label}>{t('emailLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="operator@dairy.com"
-              placeholderTextColor={colors.textTertiary}
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-
-            <Text style={styles.label}>{t('passwordLabel')}</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="••••••••"
-              placeholderTextColor={colors.textTertiary}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-
-            <TouchableOpacity
-              style={styles.primaryBtn}
-              onPress={handleEmailAuth}
-              disabled={loading || googleLoading}
-              activeOpacity={0.8}
-            >
-              {loading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.primaryBtnText}>
-                  {isSignUp ? 'Sign Up' : 'Log In'}
+            {/* Tabs selector */}
+            <View style={styles.tabContainer}>
+              <TouchableOpacity
+                style={[styles.tabButton, loginMethod === 'email' && styles.tabButtonActive]}
+                onPress={() => { setLoginMethod('email'); setOtpSent(false); }}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.tabButtonText, loginMethod === 'email' && styles.tabButtonTextActive]}>
+                  {t('emailTab')}
                 </Text>
-              )}
-            </TouchableOpacity>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.tabButton, loginMethod === 'phone' && styles.tabButtonActive]}
+                onPress={() => setLoginMethod('phone')}
+                activeOpacity={0.7}
+              >
+                <Text style={[styles.tabButtonText, loginMethod === 'phone' && styles.tabButtonTextActive]}>
+                  {t('phoneTab')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {loginMethod === 'email' ? (
+              <>
+                <Text style={styles.label}>{t('emailLabel')}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="operator@dairy.com"
+                  placeholderTextColor={colors.textTertiary}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+
+                <Text style={styles.label}>{t('passwordLabel')}</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="••••••••"
+                  placeholderTextColor={colors.textTertiary}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+
+                <TouchableOpacity
+                  style={styles.primaryBtn}
+                  onPress={handleEmailAuth}
+                  disabled={loading || googleLoading}
+                  activeOpacity={0.8}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.primaryBtnText}>
+                      {isSignUp ? 'Sign Up' : 'Log In'}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </>
+            ) : (
+              <>
+                <Text style={styles.label}>{t('phoneLabel')}</Text>
+                <View style={styles.phoneInputContainer}>
+                  <Text style={styles.countryCode}>+91</Text>
+                  <TextInput
+                    style={styles.phoneInput}
+                    placeholder="9876543210"
+                    placeholderTextColor={colors.textTertiary}
+                    value={phone}
+                    onChangeText={setPhone}
+                    keyboardType="phone-pad"
+                    maxLength={10}
+                    editable={!otpSent}
+                  />
+                </View>
+
+                {otpSent && (
+                  <>
+                    <Text style={styles.label}>{t('enterOtp')}</Text>
+                    <TextInput
+                      style={styles.input}
+                      placeholder="1234"
+                      placeholderTextColor={colors.textTertiary}
+                      value={otp}
+                      onChangeText={setOtp}
+                      keyboardType="number-pad"
+                      maxLength={4}
+                    />
+                  </>
+                )}
+
+                <TouchableOpacity
+                  style={styles.primaryBtn}
+                  onPress={otpSent ? handleVerifyOtp : handleSendOtp}
+                  disabled={loading}
+                  activeOpacity={0.8}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#fff" />
+                  ) : (
+                    <Text style={styles.primaryBtnText}>
+                      {otpSent ? t('verifyOtp') : t('sendOtp')}
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </>
+            )}
 
             <View style={styles.dividerRow}>
               <View style={styles.dividerLine} />
@@ -227,6 +334,62 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
     ...shadow.card,
+  },
+  tabContainer: {
+    flexDirection: 'row',
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: radius.md,
+    padding: 3,
+    marginBottom: spacing.lg,
+  },
+  tabButton: {
+    flex: 1,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderRadius: radius.sm,
+  },
+  tabButtonActive: {
+    backgroundColor: colors.surface,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 1,
+  },
+  tabButtonText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: colors.textSecondary,
+  },
+  tabButtonTextActive: {
+    color: colors.primaryMid,
+    fontWeight: '700',
+  },
+  phoneInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    backgroundColor: colors.bg,
+    marginBottom: spacing.md,
+    paddingHorizontal: 14,
+  },
+  countryCode: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.textSecondary,
+    marginRight: 10,
+    borderRightWidth: 1,
+    borderRightColor: colors.border,
+    paddingRight: 10,
+    paddingVertical: 12,
+  },
+  phoneInput: {
+    flex: 1,
+    fontSize: 15,
+    color: colors.textPrimary,
+    paddingVertical: 12,
   },
   label: {
     fontSize: 11,
