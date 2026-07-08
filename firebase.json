@@ -6,6 +6,9 @@
       },
       "google.com": {
         "enable": true
+      },
+      "phone": {
+        "enable": true
       }
     }
   }
